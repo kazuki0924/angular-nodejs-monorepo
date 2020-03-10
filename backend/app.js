@@ -11,7 +11,7 @@ mongoose
     "mongodb+srv://Kazuki-angular:1234Password@cluster0-svlok.gcp.mongodb.net/node-angular?retryWrites=true&w=majority"
   )
   .then(() => {
-    console.log("Conntected to database!");
+    console.log("Connected to database!");
   })
   .catch(() => {
     console.log("Connection failed!");
@@ -40,22 +40,24 @@ app.post("/api/posts", (req, res, next) => {
   });
   post.save();
   res.status(201).json({
-    message: "Post send successfully"
+    message: "Post added successfully"
   });
 });
 
 app.get("/api/posts", (req, res, next) => {
   Post.find().then(documents => {
     res.status(200).json({
-      message: "Posts fetched successfully",
+      message: "Posts fetched successfully!",
       posts: documents
     });
   });
 });
 
 app.delete("/api/posts/:id", (req, res, next) => {
-  console.log(req.params.id);
-  res.status(200).json({ message: "Post deleted!" });
+  Post.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result);
+    res.status(200).json({ message: "Post deleted!" });
+  });
 });
 
 module.exports = app;

@@ -9,10 +9,10 @@ router.post("", (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-  post.save().then(createPost => {
+  post.save().then(createdPost => {
     res.status(201).json({
       message: "Post added successfully",
-      postId: createPost._id
+      postId: createdPost._id
     });
   });
 });
@@ -52,5 +52,6 @@ router.delete("/:id", (req, res, next) => {
     console.log(result);
     res.status(200).json({ message: "Post deleted!" });
   });
+});
 
 module.exports = router;

@@ -11,7 +11,7 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   getPosts() {
     this.http
@@ -39,7 +39,7 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string, imagePath: string }>(
+    return this.http.get<{ _id: string, title: string, content: string, imagePath: string }>(
       "http://localhost:3000/api/posts/" + id
     );
   }
@@ -55,9 +55,12 @@ export class PostsService {
         postData
       )
       .subscribe(responseData => {
-        const post: Post = { id: responseData.post.id, title: title, content: content, imagePath: responseData.post.imagePath };
-        const id = responseData.post.id;
-        post.id = id;
+        const post: Post = {
+          id: responseData.post.id,
+          title: title,
+          content: content,
+          imagePath: responseData.post.imagePath
+        };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(["/"]);
@@ -66,9 +69,9 @@ export class PostsService {
 
   updatePost(id: string, title: string, content: string, image: File | string) {
     let postData: Post | FormData;
-    if (typeof (image) === 'object') {
+    if (typeof image === "object") {
       postData = new FormData();
-      postData.append("id", id)
+      postData.append("id", id);
       postData.append("title", title);
       postData.append("content", content);
       postData.append("image", image, title);
@@ -78,7 +81,7 @@ export class PostsService {
         title: title,
         content: content,
         imagePath: image
-      }
+      };
     }
     this.http
       .put("http://localhost:3000/api/posts/" + id, postData)
@@ -89,8 +92,8 @@ export class PostsService {
           id: id,
           title: title,
           content: content,
-          imagePath: response.imagePath
-        }
+          imagePath: ""
+        };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
